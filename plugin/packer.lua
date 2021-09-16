@@ -26,6 +26,9 @@ pack.startup(function(use)
   use({ 'tpope/vim-surround' })
   use({ 'tpope/vim-fugitive', cmd = { 'Git', 'Gwrite', 'Gedit', 'Gvdiffsplit' } })
 
+  -- g<, g>, gs to swap stuff
+  use({ 'machakann/vim-swap' })
+
   -- align stuff
   use({ 'godlygeek/tabular', cmd = 'Tabularize' })
 
@@ -43,9 +46,6 @@ pack.startup(function(use)
       vim.g.suda_smart_edit = 1
     end,
   })
-
-  -- checking regs with '"', or in insert mode with <c-r>
-  use({ 'tversteeg/registers.nvim' })
 
   -- LSP stuff
   -- does not need lazy loading, since it is already lazy
@@ -167,10 +167,10 @@ pack.startup(function(use)
     'ms-jpq/coq_nvim',
     branch = 'coq',
     config = function()
-      require('plugins.others').coq()
+      require('plugins.coq')
     end,
     run = ':COQdeps',
-    requires = { { 'ms-jpq/coq.artifacts', branch = 'artifacts' } },
+    requires = { { 'ms-jpq/coq.artifacts', branch = 'artifacts' }, { 'ms-jpq/coq.thirdparty' } },
   })
 
   -- tab in normal to 'exit' strings, lists, etc.

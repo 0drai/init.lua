@@ -15,7 +15,7 @@ remap_default('n', 'j', 'gj')
 remap_default('n', 'k', 'gk')
 
 -- quit buffer fast
-remap_default('n', 'gq', ':q!<CR>')
+remap_default('n', 'gQ', ':q!<CR>')
 remap_default('n', 'gx', ':x!<CR>')
 
 -- fast spell replacement

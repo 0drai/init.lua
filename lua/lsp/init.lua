@@ -126,11 +126,11 @@ end
 if pcall(require, 'grammar-guard') and pcall(require, 'lspconfig') then
   require('grammar-guard').init()
   require('lspconfig').grammar_guard.setup({
-    coq.lsp_ensure_capabilities({
       capabilities = capabilities,
       on_attach = on_attach,
       settings = {
         ltex = {
+          enabled = { 'latex', 'tex', 'markdown' },
           language = 'en-US',
           diagnosticSeverity = 'information',
           setenceCacheSize = 2000,
@@ -141,12 +141,11 @@ if pcall(require, 'grammar-guard') and pcall(require, 'lspconfig') then
           hiddenFalsePositives = {},
         },
       },
-    }),
   })
 end
 
 -- use default config for these lsps
-for _, lsp in ipairs({ 'bashls', 'denols', 'jsonls', 'texlab' }) do
+for _, lsp in ipairs({ 'bashls', 'denols', 'jsonls', 'texlab', 'dockerls' }) do
   lspconfig[lsp].setup(coq.lsp_ensure_capabilities({
     capabilities = capabilities,
     on_attach = on_attach,

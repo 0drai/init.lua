@@ -48,41 +48,6 @@ M.matchup = function()
   g.matchup_surround_enabled = 1
 end
 
-M.coq = function()
-  g.coq_settings = {
-    ['keymap.recommended'] = false,
-    ['keymap.jump_to_mark'] = '<c-j>',
-    ['auto_start'] = 'shut-up',
-
-    ['clients.tmux.enabled'] = false,
-    ['clients.tree_sitter.enabled'] = false,
-    ['clients.tags.enabled'] = false,
-
-    ['clients.lsp.weight_adjust'] = 0.7,
-    ['clients.snippets.weight_adjust'] = 0.5,
-    ['clients.paths.weight_adjust'] = 0.4,
-    ['clients.buffers.weight_adjust'] = 0.3,
-
-    ['display.icons.mode'] = 'long',
-    ['display.pum.source_context'] = { '[', ']' },
-    ['display.pum.kind_context'] = { ' ', ' ' },
-  }
-
-  local remap = vim.api.nvim_set_keymap
-  -- these mappings are coq recommended mappings unrelated to nvim-autopairs
-  remap('i', '<esc>', [[pumvisible() ? "<c-e><esc>" : "<esc>"]], { expr = true, noremap = true })
-  remap('i', '<c-c>', [[pumvisible() ? "<c-e><c-c>" : "<c-c>"]], { expr = true, noremap = true })
-  remap('i', '<tab>', [[pumvisible() ? "<c-n>" : "<tab>"]], { expr = true, noremap = true })
-  remap('i', '<s-tab>', [[pumvisible() ? "<c-p>" : "<bs>"]], { expr = true, noremap = true })
-end
-
-M.rnvimr = function()
-  g.rnvimr_enable_ex = 1
-  g.rnvimr_enable_picker = 1
-  g.rnvimr_draw_border = 1
-  g.rnvimr_hide_gitignore = 1
-end
-
 M.zen = function()
   require('zen-mode').setup({
     plugins = { gitsigns = true, tmux = true },

@@ -1,157 +1,165 @@
-local lspconfig = require('lspconfig')
-local coq = require('coq')
+local lspconfig = require("lspconfig")
+local cmp_lsp = require("cmp_nvim_lsp")
 
 -- https://github.com/neovim/nvim-lspconfig
 local on_attach = function(client, bufnr)
-  local signature = require('lsp_signature')
+	local signature = require("lsp_signature")
 
-  signature.on_attach({
-    bind = true,
-    hint_enable = true,
-    floating_window = true,
-    hint_prefix = ' ',
-    hint_scheme = 'String',
-    handler_opts = { border = 'single' },
-  })
+	signature.on_attach({
+		bind = true,
+		hint_enable = true,
+		floating_window = true,
+		hint_prefix = " ",
+		hint_scheme = "String",
+		handler_opts = { border = "single" },
+	})
 
-  local rm = function(keybinding, command)
-    local opts = { noremap = true, silent = true }
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', keybinding, command, opts)
-  end
+	local rm = function(keybinding, command)
+		local opts = { noremap = true, silent = true }
+		vim.api.nvim_buf_set_keymap(bufnr, "n", keybinding, command, opts)
+	end
 
-  rm('gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>')
-  rm('gd', '<Cmd>lua vim.lsp.buf.definition()<CR>')
-  rm('<localleader>ff', '<cmd>lua vim.lsp.buf.formatting()<CR>')
+	rm("gD", "<Cmd>lua vim.lsp.buf.declaration()<CR>")
+	rm("gd", "<Cmd>lua vim.lsp.buf.definition()<CR>")
+	rm("<localleader>ff", "<cmd>lua vim.lsp.buf.formatting()<CR>")
 
-  -- vim already has builtin docs
-  if vim.bo.ft ~= 'vim' then
-    rm('K', '<Cmd>lua vim.lsp.buf.hover()<CR>')
-  end
+	-- vim already has builtin docs
+	if vim.bo.ft ~= "vim" then
+		rm("K", "<Cmd>lua vim.lsp.buf.hover()<CR>")
+	end
 
-  rm('<localleader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>')
-  rm('<localleader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>')
-  rm('<localleader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>')
-  rm('<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>')
-  rm('<localleader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>')
-  rm('<localleader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>')
-  rm('<localleader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>')
-  rm('gr', '<cmd>lua vim.lsp.buf.references()<CR>')
-  rm('<localleader>d', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>')
-  rm('<c-h>', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>')
-  rm('<c-l>', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>')
-  rm('<space>ff', '<cmd>lua vim.lsp.buf.formatting()<CR>')
+	rm("<localleader>wa", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>")
+	rm("<localleader>wr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>")
+	rm("<localleader>wl", "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>")
+	rm("<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>")
+	rm("<localleader>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>")
+	rm("<localleader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>")
+	rm("<localleader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>")
+	rm("gr", "<cmd>lua vim.lsp.buf.references()<CR>")
+	rm("<localleader>d", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>")
+	rm("<c-h>", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>")
+	rm("<c-l>", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>")
+	rm("<space>ff", "<cmd>lua vim.lsp.buf.formatting()<CR>")
 
-  if client.resolved_capabilities.document_highlight then
-    vim.api.nvim_exec(
-      [[
+	if client.resolved_capabilities.document_highlight then
+		vim.api.nvim_exec(
+			[[
     augroup lsp_document_highlight
       autocmd! * <buffer>
       autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
       autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
     augroup END
     ]],
-      false
-    )
-  end
+			false
+		)
+	end
 end
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
+local capabilities = cmp_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 capabilities.textDocument.completion.completionItem.resolveSupport = {
-  properties = { 'documentation', 'detail', 'additionalTextEdits' },
+	properties = { "documentation", "detail", "additionalTextEdits" },
 }
 
 -- Configure lua language server for neovim development
-local sumneko_binary_path = '/opt/lua-language-server/bin/Linux/lua-language-server'
-local sumneko_root_path = vim.fn.fnamemodify(sumneko_binary_path, ':h:h:h')
-local runtime_path = vim.split(package.path, ';')
-table.insert(runtime_path, 'lua/?.lua')
-table.insert(runtime_path, 'lua/?/init.lua')
+local sumneko_binary_path = "/opt/lua-language-server/bin/Linux/lua-language-server"
+local sumneko_root_path = vim.fn.fnamemodify(sumneko_binary_path, ":h:h:h")
+local runtime_path = vim.split(package.path, ";")
+table.insert(runtime_path, "lua/?.lua")
+table.insert(runtime_path, "lua/?/init.lua")
 
-lspconfig.sumneko_lua.setup(coq.lsp_ensure_capabilities({
-  on_attach = on_attach,
-  cmd = { sumneko_binary_path, '-E', sumneko_root_path .. '/main.lua' },
-  settings = {
-    Lua = {
-      path = sumneko_root_path,
-      diagnostics = { enable = true, globals = { 'vim', 'packer_plugins' } },
-      runtime = { path = runtime_path, version = 'LuaJIT' },
-      workspace = {
-        library = { library = vim.api.nvim_get_runtime_file('', true) },
-      },
-      telemetry = { enable = false },
-    },
-  },
-}))
+lspconfig.sumneko_lua.setup({
+	capabilities = capabilities,
+	on_attach = on_attach,
+	cmd = { sumneko_binary_path, "-E", sumneko_root_path .. "/main.lua" },
+	settings = {
+		Lua = {
+			path = sumneko_root_path,
+			diagnostics = { enable = true, globals = { "vim", "packer_plugins" } },
+			runtime = { path = runtime_path, version = "LuaJIT" },
+			workspace = {
+				library = { library = vim.api.nvim_get_runtime_file("", true) },
+			},
+			telemetry = { enable = false },
+		},
+	},
+})
 
-lspconfig.pyright.setup(coq.lsp_ensure_capabilities({
-  capabilities = capabilities,
-  on_attach = on_attach,
-  settings = {
-    python = {
-      analysis = {
-        autoSearchPaths = true,
-        diagnosticMode = 'workspace',
-        useLibraryCodeForTypes = true,
-      },
-      -- most importantly
-      venvPath = os.getenv('CONDA_VENV_PATH'),
-    },
-  },
-}))
+lspconfig.pyright.setup({
+	capabilities = capabilities,
+	on_attach = on_attach,
+	settings = {
+		python = {
+			analysis = {
+				autoSearchPaths = true,
+				diagnosticMode = "workspace",
+        typeCheckingMode = "basic",
+        -- reportMissingTypeStubs = nil,
+        strictListInference = true,
+        strictDictionaryInference = true,
+        strictSetInference = true,
+        strictParameterNoneValue = true,
+        reportMissingImports = true,
+				useLibraryCodeForTypes = true,
+			},
+			-- most importantly
+			venvPath = os.getenv("CONDA_VENV_PATH"),
+		},
+	},
+})
 
-lspconfig.clangd.setup(coq.lsp_ensure_capabilities({
-  capabilities = capabilities,
-  on_attach = on_attach,
-  cmd = {
-    'clangd',
-    '--background-index',
-    '--suggest-missing-includes',
-    '--clang-tidy',
-    '--header-insertion=iwyu',
-  },
-}))
+lspconfig.clangd.setup({
+	capabilities = capabilities,
+	on_attach = on_attach,
+	cmd = {
+		"clangd",
+		"--background-index",
+		"--suggest-missing-includes",
+		"--clang-tidy",
+		"--header-insertion=iwyu",
+	},
+})
 
 -- stuff like inlay hints and so on
-if pcall(require, 'rust-tools') and pcall(require, 'lspconfig') then
-  require('rust-tools').setup({
-    ['server'] = coq.lsp_ensure_capabilities({
-      capabilities = capabilities,
-      on_attach = on_attach,
-    }),
-  })
+if pcall(require, "rust-tools") and pcall(require, "lspconfig") then
+	require("rust-tools").setup({
+		["server"] = {
+			capabilities = capabilities,
+			on_attach = on_attach,
+		},
+	})
 end
 
 -- latex languagetool support
-if pcall(require, 'grammar-guard') and pcall(require, 'lspconfig') then
-  require('grammar-guard').init()
-  require('lspconfig').grammar_guard.setup({
-      capabilities = capabilities,
-      on_attach = on_attach,
-      settings = {
-        ltex = {
-          enabled = { 'latex', 'tex', 'markdown' },
-          language = 'en-US',
-          diagnosticSeverity = 'information',
-          setenceCacheSize = 2000,
-          additionalRules = { enablePickyRules = true, motherTongue = 'de' },
-          trace = { server = 'off' },
-          dictionary = {},
-          disabledRules = {},
-          hiddenFalsePositives = {},
-        },
-      },
-  })
+if pcall(require, "grammar-guard") then
+	require("grammar-guard").init()
+	require("lspconfig").grammar_guard.setup({
+		capabilities = capabilities,
+		on_attach = on_attach,
+		settings = {
+			ltex = {
+				enabled = { "latex", "tex", "markdown", "text" },
+				language = "en-US",
+				diagnosticSeverity = "information",
+				setenceCacheSize = 2000,
+				additionalRules = { enablePickyRules = true, motherTongue = "de" },
+				trace = { server = "off" },
+				dictionary = {},
+				disabledRules = {},
+				hiddenFalsePositives = {},
+			},
+		},
+	})
 end
 
 -- use default config for these lsps
-for _, lsp in ipairs({ 'bashls', 'denols', 'jsonls', 'texlab', 'dockerls' }) do
-  lspconfig[lsp].setup(coq.lsp_ensure_capabilities({
-    capabilities = capabilities,
-    on_attach = on_attach,
-  }))
+for _, lsp in ipairs({ "bashls", "denols", "jsonls", "texlab", "dockerls" }) do
+	lspconfig[lsp].setup({
+		capabilities = capabilities,
+		on_attach = on_attach,
+	})
 end
 
 -- require('lsp.saga')
-require('lsp.handlers')
-require('lsp.symbols')
+require("lsp.handlers")
+require("lsp.symbols")

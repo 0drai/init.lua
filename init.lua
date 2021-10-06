@@ -19,9 +19,3 @@ g.loaded_man = 1
 g.loaded_fzf = 1
 g.loaded_tutor = 1
 g.loaded_syncolor = 1
-
-g.coq_settings = { ['auto_start'] = 'shut-up' }
-
--- g.ale_disable_lsp = 1
--- g.ale_sign_highlight_linenrs = 1
--- g.ale_close_preview_on_insert = 1

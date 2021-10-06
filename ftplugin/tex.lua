@@ -5,10 +5,10 @@ opt.textwidth = 0
 opt.shiftwidth = 2
 opt.tabstop = 2
 
-g.vimtex_quickfix_mode = '0'
-g.vimtex_view_general_viewer = 'okular'
-g.vimtex_view_general_options_latexmk = '--unique'
-g.tex_flavor = 'latex'
+g.vimtex_quickfix_mode = "0"
+g.vimtex_view_general_viewer = "okular"
+g.vimtex_view_general_options_latexmk = "--unique"
+g.tex_flavor = "latex"
 
 vim.cmd([[
 augroup latex_clean

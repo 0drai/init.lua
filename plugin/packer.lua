@@ -1,261 +1,288 @@
 -- bootstrap packer
-local execute = vim.api.nvim_command
 local fn = vim.fn
 
 -- $XDG_DATA_HOME/nvim/..
-local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
+local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
 
 if fn.empty(fn.glob(install_path)) > 0 then
-  fn.system({
-    'git',
-    'clone',
-    'https://github.com/wbthomason/packer.nvim',
-    install_path,
-  })
-  execute('packadd packer.nvim')
+	fn.system({
+		"git",
+		"clone",
+		"https://github.com/wbthomason/packer.nvim",
+		install_path,
+	})
+	vim.api.nvim_command("packadd packer.nvim")
 end
 
-local pack = require('packer')
+local pack = require("packer")
 
 pack.startup(function(use)
-  -- packer manages itself
-  use({ 'wbthomason/packer.nvim', opt = true })
+	-- packer manages itself
+	use({ "wbthomason/packer.nvim", opt = true })
 
-  -- classics
-  use({ 'tpope/vim-repeat', keys = { '.' } })
-  use({ 'tpope/vim-surround' })
-  use({ 'tpope/vim-fugitive', cmd = { 'Git', 'Gwrite', 'Gedit', 'Gvdiffsplit' } })
+	-- classics
+	use({ "tpope/vim-repeat", keys = { "." } })
+	use({ "tpope/vim-surround" })
+	use({ "tpope/vim-fugitive", cmd = { "Git", "Gwrite", "Gedit", "Gvdiffsplit" } })
 
-  -- g<, g>, gs to swap stuff
-  use({ 'machakann/vim-swap' })
+	-- g<, g>, gs to swap stuff
+	use({ "machakann/vim-swap" })
 
-  -- align stuff
-  use({ 'godlygeek/tabular', cmd = 'Tabularize' })
+	-- align stuff
+	use({ "godlygeek/tabular", cmd = "Tabularize" })
 
-  -- move reliably to root folder
-  use({
-    'airblade/vim-rooter',
-    config = function()
-      require('plugins.others').rooter()
-    end,
-  })
+	-- move reliably to root folder
+	use({
+		"airblade/vim-rooter",
+		config = function()
+			require("plugins.others").rooter()
+		end,
+	})
 
-  use({
-    'lambdalisue/suda.vim',
-    config = function()
-      vim.g.suda_smart_edit = 1
-    end,
-  })
+	use({
+		"lambdalisue/suda.vim",
+		config = function()
+			vim.g.suda_smart_edit = 1
+		end,
+	})
 
-  -- LSP stuff
-  -- does not need lazy loading, since it is already lazy
-  use({
-    'neovim/nvim-lspconfig',
-    config = function()
-      require('lsp')
-    end,
-    wants = 'coq_nvim',
-    requires = {
-      { 'ray-x/lsp_signature.nvim' }, -- echodoc in good
-      { 'brymer-meneses/grammar-guard.nvim', run = ':GrammarInstall' },
-      { 'simrat39/rust-tools.nvim' }, -- config for rust
-    },
-  })
+	-- LSP stuff
+	-- does not need lazy loading, since it is already lazy
+	use({
+		"neovim/nvim-lspconfig",
+		config = function()
+			require("lsp")
+		end,
+		requires = {
+			{ "ray-x/lsp_signature.nvim" }, -- echodoc in good
+			{
+				-- icons in pum
+				"onsails/lspkind-nvim",
+				config = function()
+					require("lspkind").init()
+				end,
+			},
+			-- languagetool server for latex
+			-- { 'brymer-meneses/grammar-guard.nvim', run = ':GrammarInstall' },
+			{ "brymer-meneses/grammar-guard.nvim" },
+			-- enhances rust
+			{ "simrat39/rust-tools.nvim" }, -- config for rust
+		},
+	})
 
-  -- use {
-  -- 'dense-analysis/ale',
-  -- config = function() require('plugins.ale') end,
-  -- requires = 'nathunsmitty/nvim-ale-diagnostic'
-  -- }
+	use({
+		"hrsh7th/nvim-cmp",
+		requires = {
+			{ "rafamadriz/friendly-snippets" },
+			{ "L3MON4D3/LuaSnip" },
 
-  -- linter (ale replacement)
-  use({
-    'mfussenegger/nvim-lint',
-    event = 'BufEnter',
-    config = function()
-      require('plugins.lint')
-    end,
-  })
+			-- sources
+			{ "hrsh7th/cmp-nvim-lsp" },
+			{ "hrsh7th/cmp-buffer" },
+			{ "saadparwaiz1/cmp_luasnip" },
+			{ "hrsh7th/cmp-emoji" },
+			{ "hrsh7th/cmp-path" },
+			{ "f3fora/cmp-spell" },
+		},
 
-  -- format with <space>fa
-  use({
-    'lukas-reineke/format.nvim',
-    cmd = { 'Format', 'FormatWrite' },
-    config = function()
-      require('plugins.format')
-    end,
-  })
+		config = function()
+			require("plugins.cmp")
+		end,
+		after = { "neogen" },
+	})
 
-  -- FZF replacement with in-built LSP features
-  use({
-    'nvim-telescope/telescope.nvim',
-    config = function()
-      require('plugins.telescope')
-    end,
-    cmd = { 'Telescope' },
-    requires = {
-      { 'nvim-lua/popup.nvim' },
-      { 'nvim-lua/plenary.nvim' },
-      { 'nvim-telescope/telescope-bibtex.nvim' },
-      { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' },
-    },
-  })
+	use({
+		"abecodes/tabout.nvim",
+		wants = "nvim-treesitter",
+		config = function()
+			require("plugins.tabout")
+		end,
+	})
 
-  -- basically vim-commentary in lua
-  -- 'gcc' to comment an uncomment stuff
-  use({
-    'winston0410/commented.nvim',
-    config = function()
-      require('commented').setup({
-        keybindings = { n = 'gc', v = 'gc', nl = 'gcc' },
-      })
-    end,
-  })
+	-- linter (ale replacement)
+	use({
+		"mfussenegger/nvim-lint",
+		event = "BufEnter",
+		config = function()
+			require("plugins.lint")
+		end,
+	})
 
-  -- colorschemes with support for Treesitter, LSP, and so on
-  -- NOTE: load UI plugins after sourcing the colorscheme, for performance
-  -- and to overwrite highlight groups properly
-  use({
-    'marko-cerovac/material.nvim',
-    config = function()
-      require('plugins.material')
-    end,
-  })
+	-- format with <space>fa
+	use({
+		"lukas-reineke/format.nvim",
+		cmd = { "Format", "FormatWrite" },
+		config = function()
+			require("plugins.format")
+		end,
+	})
 
-  use({
-    'lukas-reineke/indent-blankline.nvim',
-    wants = 'nvim-treesitter',
-    after = 'material.nvim',
-    config = function()
-      require('plugins.others').indent_bline()
-    end,
-  })
+	-- FZF replacement with in-built LSP features
+	use({
+		"nvim-telescope/telescope.nvim",
+		config = function()
+			require("plugins.telescope")
+		end,
+		-- cmd = { 'Telescope' },
+		requires = {
+			{ "nvim-lua/popup.nvim" },
+			{ "nvim-lua/plenary.nvim" },
+			{ "nvim-telescope/telescope-bibtex.nvim" },
+			{ "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
+		},
+	})
 
-  -- lua statusline
-  use({
-    'famiu/feline.nvim',
-    event = 'BufWinEnter',
-    config = "require('plugins.feline')",
-    after = 'material.nvim',
-    wants = 'gitsigns.nvim',
-    requires = { 'kyazdani42/nvim-web-devicons' },
-  })
+	use({
+		"AckslD/nvim-neoclip.lua",
+		requires = { "tami5/sqlite.lua", module = "sqlite" },
+		config = function()
+			require("neoclip").setup({ enable_persistant_history = true })
+		end,
+	})
 
-  -- gitgutter replacement
-  use({
-    'lewis6991/gitsigns.nvim',
-    after = 'material.nvim',
-    requires = { 'nvim-lua/plenary.nvim' },
-    config = "require('plugins.gitsigns')",
-  })
+	-- basically vim-commentary in lua
+	-- 'gcc' to comment an uncomment stuff
+	use({
+		"winston0410/commented.nvim",
+		config = function()
+			require("commented").setup({
+				keybindings = { n = "gc", v = "gc", nl = "gcc" },
+			})
+		end,
+	})
 
-  use({
-    'nvim-treesitter/nvim-treesitter',
-    event = 'CursorHold',
-    config = "require('plugins.treesitter')",
-    run = ':TSUpdate',
-  })
+	-- colorschemes with support for Treesitter, LSP, and so on
+	-- NOTE: load UI plugins after sourcing the colorscheme, for performance
+	-- and to overwrite highlight groups properly
+	use({
+		"marko-cerovac/material.nvim",
+		config = function()
+			require("plugins.material")
+		end,
+	})
 
-  use({
+	use({
+		"lukas-reineke/indent-blankline.nvim",
+		wants = "nvim-treesitter",
+		after = "material.nvim",
+		config = function()
+			require("plugins.others").indent_bline()
+		end,
+	})
 
-    'p00f/nvim-ts-rainbow',
-    event = 'CursorMoved',
-    after = 'nvim-treesitter',
-  })
+	-- lua statusline
+	use({
+		"famiu/feline.nvim",
+		event = "BufWinEnter",
+		config = "require('plugins.feline')",
+		after = "material.nvim",
+		wants = "gitsigns.nvim",
+		requires = { "kyazdani42/nvim-web-devicons" },
+	})
 
-  use({
-    'ms-jpq/coq_nvim',
-    branch = 'coq',
-    config = function()
-      require('plugins.coq')
-    end,
-    run = ':COQdeps',
-    requires = { { 'ms-jpq/coq.artifacts', branch = 'artifacts' }, { 'ms-jpq/coq.thirdparty' } },
-  })
+	-- gitgutter replacement
+	use({
+		"lewis6991/gitsigns.nvim",
+		after = "material.nvim",
+		requires = { "nvim-lua/plenary.nvim" },
+		config = "require('plugins.gitsigns')",
+	})
 
-  -- tab in normal to 'exit' strings, lists, etc.
-  use({
-    'abecodes/tabout.nvim',
-    config = function()
-      require('plugins.tabout')
-    end,
-    after = 'coq_nvim',
-    wants = 'nvim-treesitter',
-    event = 'InsertEnter',
-  })
+	use({
+		"nvim-treesitter/nvim-treesitter",
+		-- event = "CursorHold",
+		config = "require('plugins.treesitter')",
+		run = ":TSUpdate",
+	})
 
-  -- treesitter powered matchup
-  -- e.g., detects switch statements blocks and so on
-  use({
-    'andymass/vim-matchup',
-    wants = 'nvim-treesitter',
-    event = 'CursorMoved',
-    config = function()
-      require('plugins.others').matchup()
-    end,
-  })
+	use({
+		"p00f/nvim-ts-rainbow",
+		event = "CursorMoved",
+		after = "nvim-treesitter",
+	})
 
-  use({
-    'windwp/nvim-autopairs',
-    after = 'nvim-treesitter',
-    config = function()
-      require('plugins.nvim-autopairs')
-    end,
-  })
+	-- treesitter powered matchup
+	-- e.g., detects switch statements blocks and so on
+	use({
+		"andymass/vim-matchup",
+		after = "nvim-treesitter",
+		event = "CursorMoved",
+		config = function()
+			require("plugins.others").matchup()
+		end,
+	})
 
-  -- open agenda with ',oa'
-  use({
-    'kristijanhusak/orgmode.nvim',
-    after = 'coq_nvim',
-    branch = 'tree-sitter',
-    config = function()
-      require('plugins.orgmode')
-    end,
-  })
+	use({
+		"windwp/nvim-autopairs",
+		after = "nvim-treesitter",
+		config = function()
+			require("plugins.nvim-autopairs")
+		end,
+	})
 
-  -- goyo replacement
-  use({
-    'folke/zen-mode.nvim',
-    cmd = 'ZenMode',
-    requires = { 'folke/twilight.nvim', cmd = 'ZenMode' },
-    config = function()
-      require('plugins.others').zen()
-    end,
-  })
+	use({
+		"danymat/neogen",
+		after = "nvim-treesitter",
+		config = function()
+			require("neogen").setup({
+				enabled = true,
+				jump_key = "<TAB>",
+			})
+		end,
+	})
 
-  -- NOTE: symbols-outline has more features than vista, e.g., renaming
-  -- but it relies on LSP. Unlike vista which is able to use tags
-  use({ 'simrat39/symbols-outline.nvim', opt = true, cmd = { 'SymbolsOutline' } })
+	-- open agenda with ',oa'
+	use({
+		"kristijanhusak/orgmode.nvim",
+		branch = "tree-sitter",
+		config = function()
+			require("plugins.orgmode")
+		end,
+	})
 
-  use({
-    'beauwilliams/focus.nvim',
-    config = function()
-      require('focus').setup({
-        number = true,
-        relativenumber = true,
-        hybridnumber = true,
-        cursorline = true,
-      })
-    end,
-  })
+	-- goyo replacement
+	use({
+		"folke/zen-mode.nvim",
+		cmd = "ZenMode",
+		requires = { "folke/twilight.nvim", cmd = "ZenMode" },
+		config = function()
+			require("plugins.others").zen()
+		end,
+	})
 
-  use({
-    'glepnir/dashboard-nvim',
-    event = 'BufWinEnter',
-    config = function()
-      require('plugins.dashboard')
-    end,
-  })
+	-- NOTE: symbols-outline has more features than vista, e.g., renaming
+	-- but it relies on LSP. Unlike vista which is able to use tags
+	use({ "simrat39/symbols-outline.nvim", opt = true, cmd = { "SymbolsOutline" } })
 
-  use({
-    'iamcco/markdown-preview.nvim',
-    run = 'cd app && yarn install',
-    ft = { 'markdown', 'md' },
-  })
+	use({
+		"beauwilliams/focus.nvim",
+		config = function()
+			require("focus").setup({
+				number = true,
+				relativenumber = true,
+				hybridnumber = true,
+				cursorline = true,
+			})
+		end,
+	})
 
-  use({ 'https://github.com/plasticboy/vim-markdown', ft = { 'markdown', 'md' } })
+	use({
+		"glepnir/dashboard-nvim",
+		event = "BufWinEnter",
+		config = function()
+			require("plugins.dashboard")
+		end,
+	})
 
-  use({ 'ron89/thesaurus_query.vim', cmd = 'ThesaurusQueryReplaceCurrentWord' })
+	use({
+		"iamcco/markdown-preview.nvim",
+		run = "cd app && yarn install",
+		ft = { "markdown", "md" },
+	})
 
-  use({ 'lervag/vimtex', ft = { 'latex', 'tex' } })
+	use({ "https://github.com/plasticboy/vim-markdown", ft = { "markdown", "md" } })
+
+	use({ "ron89/thesaurus_query.vim", cmd = "ThesaurusQueryReplaceCurrentWord" })
+
+	use({ "lervag/vimtex", ft = { "latex", "tex" } })
 end)

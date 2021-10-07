@@ -21,7 +21,7 @@ for i, sign in ipairs(signs) do
 end
 
 local config = {
-	virtual_text = true,
+	virtual_text = { source = "always", prefix = "●" },
 	signs = signs,
 	underline = true,
 	update_in_insert = false,
@@ -38,53 +38,29 @@ vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.s
 	border = "single",
 })
 
--- vim.lsp.handlers['textDocument/publishDiagnostics'] = function(_, _, params, client_id, _)
--- local config = {
--- underline = true,
--- virtual_text = true,
--- signs = true,
--- update_in_insert = false,
--- }
--- local uri = params.uri
--- local bufnr = vim.uri_to_bufnr(uri)
-
--- if not bufnr then
--- return
--- end
-
--- local diagnostics = params.diagnostics
-
--- for i, v in ipairs(diagnostics) do
--- if v.source ~= nil then
--- diagnostics[i].message = string.format('%s: %s', v.source, v.message)
--- else
--- diagnostics[i].message = v.message
--- end
--- end
-
--- vim.lsp.diagnostic.save(diagnostics, bufnr, client_id)
-
--- if not vim.api.nvim_buf_is_loaded(bufnr) then
--- return
--- end
-
--- vim.lsp.diagnostic.display(diagnostics, bufnr, client_id, config)
--- end
+vim.lsp.handlers["textDocument/codeAction"] = function(_, actions)
+	if actions == nil or vim.tbl_isempty(actions) then
+		print("No code actions available")
+		return
+	end
+end
 
 -- Go-to definition in a split window
-vim.lsp.handlers["textDocument/definition"] = function()
+local function goto_definition(split_cmd)
 	local util = vim.lsp.util
 	local log = require("vim.lsp.log")
 	local api = vim.api
 
-	local handler = function(_, method, result)
+	-- note, this handler style is for neovim 0.5.1/0.6, if on 0.5, call with function(_, method, result)
+	local handler = function(_, result, ctx)
 		if result == nil or vim.tbl_isempty(result) then
-			local _ = log.info() and log.info(method, "No location found")
+			local _ = log.info() and log.info(ctx.method, "No location found")
 			return nil
 		end
 
-		-- we only vertical split here
-		vim.cmd("split")
+		if split_cmd then
+			vim.cmd(split_cmd)
+		end
 
 		if vim.tbl_islist(result) then
 			util.jump_to_location(result[1])
@@ -101,3 +77,5 @@ vim.lsp.handlers["textDocument/definition"] = function()
 
 	return handler
 end
+
+vim.lsp.handlers["textDocument/definition"] = goto_definition("tab")

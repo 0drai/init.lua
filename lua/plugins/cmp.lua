@@ -26,7 +26,8 @@ cmp.setup({
 		{ name = "buffer" },
 		{ name = "emoji" },
 		{ name = "path" },
-		{ name = "spell" },
+		{ name = "nuspell" },
+
 	},
 	snippet = {
 		expand = function(args)
@@ -42,7 +43,7 @@ cmp.setup({
 				luasnip = "[LuaSnip]",
 				emoji = "[Emoji]",
 				path = "[Path]",
-				spell = "[Spell]",
+				nuspell = "[Nuspell]",
 			})[entry.source.name]
 			return vim_item
 		end,

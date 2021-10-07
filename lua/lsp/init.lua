@@ -93,13 +93,13 @@ lspconfig.pyright.setup({
 			analysis = {
 				autoSearchPaths = true,
 				diagnosticMode = "workspace",
-        typeCheckingMode = "basic",
-        -- reportMissingTypeStubs = nil,
-        strictListInference = true,
-        strictDictionaryInference = true,
-        strictSetInference = true,
-        strictParameterNoneValue = true,
-        reportMissingImports = true,
+				typeCheckingMode = "basic",
+				-- reportMissingTypeStubs = nil,
+				strictListInference = true,
+				strictDictionaryInference = true,
+				strictSetInference = true,
+				strictParameterNoneValue = true,
+				reportMissingImports = true,
 				useLibraryCodeForTypes = true,
 			},
 			-- most importantly
@@ -145,7 +145,7 @@ if pcall(require, "grammar-guard") then
 				additionalRules = { enablePickyRules = true, motherTongue = "de" },
 				trace = { server = "off" },
 				dictionary = {},
-				disabledRules = {},
+				disabledRules = { ["en-US"] = { "WHITESPACE_RULE" } },
 				hiddenFalsePositives = {},
 			},
 		},
@@ -153,7 +153,7 @@ if pcall(require, "grammar-guard") then
 end
 
 -- use default config for these lsps
-for _, lsp in ipairs({ "bashls", "denols", "jsonls", "texlab", "dockerls" }) do
+for _, lsp in ipairs({ "bashls", "denols", "jsonls", "dockerls", "texlab" }) do
 	lspconfig[lsp].setup({
 		capabilities = capabilities,
 		on_attach = on_attach,

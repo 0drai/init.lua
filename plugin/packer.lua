@@ -82,7 +82,7 @@ pack.startup(function(use)
 			{ "saadparwaiz1/cmp_luasnip" },
 			{ "hrsh7th/cmp-emoji" },
 			{ "hrsh7th/cmp-path" },
-			{ "f3fora/cmp-spell" },
+			{ "f3fora/cmp-nuspell", rocks = { "lua-nuspell" } },
 		},
 
 		config = function()

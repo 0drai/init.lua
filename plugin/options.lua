@@ -18,8 +18,8 @@ opt.signcolumn = "auto:2"
 -- disable completion messages
 opt.shortmess = vim.o.shortmess .. "c"
 
-opt.number = true
 opt.relativenumber = true
+opt.number = true
 
 opt.splitright = true
 opt.splitbelow = true

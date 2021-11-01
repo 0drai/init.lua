@@ -5,9 +5,10 @@ require("format").setup({
 	go = { { cmd = { "gofmt -w", "goimports -w" } } },
 	javascript = { { cmd = { "prettier -w", "./node_modules/.bin/eslint --fix" } } },
 	typescript = { { cmd = { "prettier -w", "./node_modules/.bin/eslint --fix" } } },
+	json = { { cmd = { "prettier -w" } } },
 	-- tex = {{cmd = {"blacktex -c -i"}}},
 	tex = { { cmd = { [[latexindent -g /dev/null -c /tmp/ -m -s -y="onlyOneBackUp:1" -w]] } } },
-	yaml = { { cmd = { "prettier -w" } } },
+	yaml = { { cmd = { "prettier -w --parser yaml" } } },
 	sh = { { cmd = { "shfmt -w" } } },
 	zsh = { { cmd = { "shfmt -w" } } }, -- :-(
 	rust = { { cmd = { "rustfmt" } } },

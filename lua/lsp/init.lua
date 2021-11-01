@@ -120,6 +120,24 @@ lspconfig.clangd.setup({
 	},
 })
 
+lspconfig.ltex.setup({
+	capabilities = capabilities,
+	on_attach = on_attach,
+	settings = {
+		ltex = {
+			language = "en-US",
+			completionEnabled = true,
+			diagnosticSeverity = "information",
+			setenceCacheSize = 4000,
+			additionalRules = { enablePickyRules = true, motherTongue = "de" },
+			trace = { server = "off" },
+			dictionary = {},
+			disabledRules = { ["en-US"] = { "WHITESPACE_RULE" } },
+			hiddenFalsePositives = {},
+		},
+	},
+})
+
 -- stuff like inlay hints and so on
 if pcall(require, "rust-tools") and pcall(require, "lspconfig") then
 	require("rust-tools").setup({
@@ -130,30 +148,8 @@ if pcall(require, "rust-tools") and pcall(require, "lspconfig") then
 	})
 end
 
--- latex languagetool support
-if pcall(require, "grammar-guard") then
-	require("grammar-guard").init()
-	require("lspconfig").grammar_guard.setup({
-		capabilities = capabilities,
-		on_attach = on_attach,
-		settings = {
-			ltex = {
-				enabled = { "latex", "tex", "markdown", "text" },
-				language = "en-US",
-				diagnosticSeverity = "information",
-				setenceCacheSize = 2000,
-				additionalRules = { enablePickyRules = true, motherTongue = "de" },
-				trace = { server = "off" },
-				dictionary = {},
-				disabledRules = { ["en-US"] = { "WHITESPACE_RULE" } },
-				hiddenFalsePositives = {},
-			},
-		},
-	})
-end
-
 -- use default config for these lsps
-for _, lsp in ipairs({ "bashls", "denols", "jsonls", "dockerls", "texlab" }) do
+for _, lsp in ipairs({ "bashls", "denols", "jsonls", "dockerls", "texlab", "solargraph" }) do
 	lspconfig[lsp].setup({
 		capabilities = capabilities,
 		on_attach = on_attach,

@@ -29,11 +29,11 @@ require("material").setup({
 	},
 
 	-- black on white completion menu
-	custom_highlights = {
+	-- custom_highlights = {
 
-		Pmenu = { fg = "#111111", bg = "#FFFFFF" }, -- Popup menu: normal item.
-		PmenuSel = { fg = "#000000", bg = "#AAAAAA", style = "italic" }, -- Popup menu: selected item.
-	},
+		-- Pmenu = { fg = "#111111", bg = "#FFFFFF" }, -- Popup menu: normal item.
+		-- PmenuSel = { fg = "#000000", bg = "#AAAAAA", style = "italic" }, -- Popup menu: selected item.
+	-- },
 })
 
 vim.g.material_style = "darker"

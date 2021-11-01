@@ -23,11 +23,9 @@ cmp.setup({
 		{ name = "nvim_lsp" },
 		{ name = "orgmode" },
 		{ name = "luasnip" },
-		{ name = "buffer" },
 		{ name = "emoji" },
 		{ name = "path" },
-		{ name = "nuspell" },
-
+		-- { name = "nuspell" },
 	},
 	snippet = {
 		expand = function(args)
@@ -38,12 +36,12 @@ cmp.setup({
 		format = function(entry, vim_item)
 			vim_item.kind = require("lspkind").presets.default[vim_item.kind] .. " " .. vim_item.kind
 			vim_item.menu = ({
-				buffer = "[Buffer]",
+				-- buffer = "[Buffer]",
 				nvim_lsp = "[LSP]",
 				luasnip = "[LuaSnip]",
 				emoji = "[Emoji]",
 				path = "[Path]",
-				nuspell = "[Nuspell]",
+				-- nuspell = "[Nuspell]",
 			})[entry.source.name]
 			return vim_item
 		end,
@@ -58,16 +56,16 @@ cmp.setup({
 
 		-- use tab for everything
 		["<Tab>"] = cmp.mapping(function(fallback)
-			if vim.fn.pumvisible() == 1 then
-				feedkey("<C-n>", "n")
-			elseif neogen.jumpable() then
-				feedkey("<cmd>lua require('neogen').jump_next()<CR>", "")
+			if cmp.visible() then
+				cmp.select_next_item()
 			elseif luasnip.expand_or_jumpable() then
 				luasnip.expand_or_jump()
 			elseif has_words_before() then
 				cmp.complete()
+			elseif neogen.jumpable() then
+				feedkey("<cmd>lua require('neogen').jump_next()<CR>", "")
 			else
-				fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
+				fallback()
 			end
 		end, {
 			"i",
@@ -75,8 +73,8 @@ cmp.setup({
 		}),
 
 		["<S-Tab>"] = cmp.mapping(function()
-			if vim.fn.pumvisible() == 1 then
-				feedkey("<C-p>", "n")
+			if cmp.visible() then
+				cmp.select_prev_item()
 			elseif luasnip.jumpable(-1) then
 				luasnip.jump(-1)
 			end

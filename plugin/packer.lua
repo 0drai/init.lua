@@ -63,8 +63,7 @@ pack.startup(function(use)
 				end,
 			},
 			-- languagetool server for latex
-			-- { 'brymer-meneses/grammar-guard.nvim', run = ':GrammarInstall' },
-			{ "brymer-meneses/grammar-guard.nvim" },
+			-- { "brymer-meneses/grammar-guard.nvim" },
 			-- enhances rust
 			{ "simrat39/rust-tools.nvim" }, -- config for rust
 		},
@@ -192,6 +191,7 @@ pack.startup(function(use)
 		"nvim-treesitter/nvim-treesitter",
 		-- event = "CursorHold",
 		config = "require('plugins.treesitter')",
+		requires = { "nvim-treesitter/nvim-treesitter-textobjects" },
 		run = ":TSUpdate",
 	})
 

@@ -104,7 +104,7 @@ telescope_remap("<leader>C", "find_files cwd=" .. os.getenv("XDG_CONFIG_HOME"))
 telescope_remap("<leader>N", "find_files cwd=" .. os.getenv("XDG_CONFIG_HOME") .. "nvim")
 
 remap_default("n", "<leader>y", ':lua require("telescope").extensions.neoclip.default()<CR>')
-remap_default("n", "<F2>", ':lua require("neogen").generate()<CR>')
+remap_default("n", "<localleader>ng", ':lua require("neogen").generate()<CR>')
 
 -- fugitive stuff
 remap_default("n", "<localleader>gg", ":Gvdiffsplit! HEAD~1:%<CR>") -- diff file with last commit

@@ -1,16 +1,17 @@
-local opt = vim.opt_local
+local o = vim.opt_local
 local g = vim.g
+local c = vim.cmd
 
-opt.textwidth = 0
-opt.shiftwidth = 2
-opt.tabstop = 2
+o.textwidth = 0
+o.shiftwidth = 2
+o.tabstop = 2
 
 g.vimtex_quickfix_mode = "0"
 g.vimtex_view_general_viewer = "okular"
-g.vimtex_view_general_options_latexmk = "--unique"
 g.tex_flavor = "latex"
+g.conceallevel = 2
 
-vim.cmd([[
+c([[
 augroup latex_clean
   " runs 'latexmk -c' after quitting
   autocmd!
@@ -18,4 +19,5 @@ augroup latex_clean
 augroup END
 ]])
 
-vim.cmd([[set spelllang=en_us]])
+c([[set spell]])
+c([[set spelllang=en_us]])

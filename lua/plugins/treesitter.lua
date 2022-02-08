@@ -28,13 +28,13 @@ require("nvim-treesitter.configs").setup({
 		"rust",
 		"comment",
 		"toml",
-		"org",
+		"norg",
 	},
 
 	highlight = {
 		enable = true,
 		-- disable = {'org'},
-		additional_vim_regex_highlighting = { "org" },
+		-- additional_vim_regex_highlighting = { "org" },
 	},
 
 	textobjects = {

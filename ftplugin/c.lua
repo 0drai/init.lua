@@ -1,10 +1,10 @@
-local opt = vim.opt_local
+local o = vim.opt_local
 
-opt.shiftwidth = 2
-opt.softtabstop = 2
-opt.tabstop = 2
+o.shiftwidth = 2
+o.softtabstop = 2
+o.tabstop = 2
 
 -- Use `//` for comments instead of `/* ... */`
-opt.commentstring = "// %s"
+o.commentstring = "// %s"
 
 vim.cmd([[nnoremap <localleader>cc :ClangdSwitchSourceHeader<CR>]])

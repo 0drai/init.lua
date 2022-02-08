@@ -1,6 +1,4 @@
 -- show source in diagnostic
--- https://github.com/neovim/nvim-lspconfig/wiki/UI-customization
--- require("nvim-ale-diagnostic")
 
 local signs = {
 	{ name = "LspDiagnosticsSignError", text = "" },
@@ -20,30 +18,11 @@ for i, sign in ipairs(signs) do
 	vim.fn.sign_define(sign_names[i], { texthl = sign_names[i], text = sign.text, numhl = "" })
 end
 
-local config = {
+vim.diagnostic.config({
 	virtual_text = { source = "always", prefix = "●" },
-	signs = signs,
+	float = { source = "always" },
 	underline = true,
-	update_in_insert = false,
-	severity_sort = true,
-}
-
-vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, config)
-
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-	border = "single",
 })
-
-vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-	border = "single",
-})
-
-vim.lsp.handlers["textDocument/codeAction"] = function(_, actions)
-	if actions == nil or vim.tbl_isempty(actions) then
-		print("No code actions available")
-		return
-	end
-end
 
 -- Go-to definition in a split window
 local function goto_definition(split_cmd)
@@ -78,4 +57,4 @@ local function goto_definition(split_cmd)
 	return handler
 end
 
-vim.lsp.handlers["textDocument/definition"] = goto_definition("tab")
+vim.lsp.handlers["textDocument/definition"] = goto_definition("split")

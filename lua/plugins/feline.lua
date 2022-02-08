@@ -126,27 +126,23 @@ local lsp_name = {
 
 local diagnos = {
 	err = {
-		provider = diag_of(lsp_diagnostics_info, "errs"),
+		provider = "diagnostic_errors",
 		left_sep = " ",
-		enabled = diag_enable(lsp_diagnostics_info, "errs"),
 		hl = { fg = colors.red },
 	},
 	hint = {
-		provider = diag_of(lsp_diagnostics_info, "hints"),
+		provider = "diagnostic_hints",
 		left_sep = " ",
-		enabled = diag_enable(lsp_diagnostics_info, "hints"),
 		hl = { fg = colors.cyan },
 	},
 	info = {
-		provider = diag_of(lsp_diagnostics_info, "infos"),
+		provider = "diagnostic_info",
 		left_sep = " ",
-		enabled = diag_enable(lsp_diagnostics_info, "infos"),
 		hl = { fg = colors.blue },
 	},
 	warn = {
-		provider = diag_of(lsp_diagnostics_info, "warns"),
+		provider = "diagnostic_warnings",
 		left_sep = " ",
-		enabled = diag_enable(lsp_diagnostics_info, "warns"),
 		hl = { fg = colors.yellow },
 	},
 }

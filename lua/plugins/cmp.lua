@@ -1,6 +1,9 @@
 local cmp = require("cmp")
+local types = require("cmp.types")
+local str = require("cmp.utils.str")
 local neogen = require("neogen")
 local luasnip = require("luasnip")
+local lspkind = require("lspkind")
 -- luasnip["luasnip.loaders.from_vscode"].load()
 require("luasnip.loaders.from_vscode").load()
 
@@ -14,8 +17,8 @@ local has_words_before = function()
 	return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
 
-local feedkey = function(key, mode)
-	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
+local t = function(key)
+	return vim.api.nvim_replace_termcodes(key, true, true, true)
 end
 
 cmp.setup({
@@ -25,6 +28,7 @@ cmp.setup({
 		{ name = "luasnip" },
 		{ name = "emoji" },
 		{ name = "path" },
+		{ name = "neorg" },
 		-- { name = "nuspell" },
 	},
 	snippet = {
@@ -33,19 +37,44 @@ cmp.setup({
 		end,
 	},
 	formatting = {
-		format = function(entry, vim_item)
-			vim_item.kind = require("lspkind").presets.default[vim_item.kind] .. " " .. vim_item.kind
-			vim_item.menu = ({
-				-- buffer = "[Buffer]",
-				nvim_lsp = "[LSP]",
-				luasnip = "[LuaSnip]",
-				emoji = "[Emoji]",
-				path = "[Path]",
-				-- nuspell = "[Nuspell]",
-			})[entry.source.name]
-			return vim_item
-		end,
+		fields = {
+			cmp.ItemField.Kind,
+			cmp.ItemField.Abbr,
+			cmp.ItemField.Menu,
+		},
+		format = lspkind.cmp_format({
+			with_text = false,
+			before = function(entry, vim_item)
+				-- Get the full snippet (and only keep first line)
+				local word = entry:get_insert_text()
+				if entry.completion_item.insertTextFormat == types.lsp.InsertTextFormat.Snippet then
+					word = vim.lsp.util.parse_snippet(word)
+				end
+				word = str.oneline(word)
+
+				if
+					entry.completion_item.insertTextFormat == types.lsp.InsertTextFormat.Snippet
+					and string.sub(vim_item.abbr, -1, -1) == "~"
+				then
+					word = word .. "~"
+				end
+				vim_item.abbr = word
+
+				return vim_item
+			end,
+		}),
 	},
+
+	-- completion = {
+	-- keyword_length = 2,
+	-- border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+	-- scrollbar = "║",
+	-- },
+
+	-- documentation = {
+	-- border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+	-- scrollbar = "║",
+	-- },
 
 	mapping = {
 		["<C-b>"] = cmp.mapping.scroll_docs(-4),
@@ -54,16 +83,30 @@ cmp.setup({
 		-- ["<C-e>"] = cmp.mapping.close(),
 		["<CR>"] = cmp.mapping.confirm({ select = true }),
 
+		["<C-j>"] = cmp.mapping(function(fallback)
+			if luasnip.expand_or_jumpable() then
+				luasnip.expand_or_jump()
+			else
+				fallback()
+			end
+		end),
+
+		["<C-k>"] = cmp.mapping(function(fallback)
+			if luasnip.jumpable(-1) then
+				luasnip.jump(-1)
+			else
+				fallback()
+			end
+		end),
+
 		-- use tab for everything
 		["<Tab>"] = cmp.mapping(function(fallback)
 			if cmp.visible() then
 				cmp.select_next_item()
-			elseif luasnip.expand_or_jumpable() then
-				luasnip.expand_or_jump()
+			elseif neogen.jumpable() then
+				vim.fn.feedkeys(t("<cmd>lua require('neogen').jump_next()<CR>"), "")
 			elseif has_words_before() then
 				cmp.complete()
-			elseif neogen.jumpable() then
-				feedkey("<cmd>lua require('neogen').jump_next()<CR>", "")
 			else
 				fallback()
 			end
@@ -72,11 +115,13 @@ cmp.setup({
 			"s",
 		}),
 
-		["<S-Tab>"] = cmp.mapping(function()
+		["<S-Tab>"] = cmp.mapping(function(fallback)
 			if cmp.visible() then
 				cmp.select_prev_item()
-			elseif luasnip.jumpable(-1) then
-				luasnip.jump(-1)
+			elseif neogen.jumpable(-1) then
+				vim.fn.feedkeys(t("<cmd>lua require('neogen').jump_prev()<CR>"), "")
+			else
+				fallback()
 			end
 		end, {
 			"i",

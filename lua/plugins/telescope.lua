@@ -1,4 +1,5 @@
 local actions = require("telescope.actions")
+local u = require("config.utils")
 
 require("telescope").setup({
 	defaults = {
@@ -69,7 +70,7 @@ require("telescope").setup({
 
 		bibtex = {
 			depth = 1,
-			global_files = { os.getenv("HOME") .. "/docs/papers/main.bib" },
+			global_files = { os.getenv("MASTERBIB") },
 			search_keys = { "title", "author", "year" },
 		},
 	},
@@ -77,3 +78,30 @@ require("telescope").setup({
 
 require("telescope").load_extension("fzf")
 require("telescope").load_extension("bibtex")
+require("telescope").load_extension("vimwiki")
+
+-- Telescope
+u.telescope_nmap("<leader>p", "fd")
+u.telescope_nmap("<leader>b", "buffers")
+u.telescope_nmap("<leader>B", "bibtex")
+u.telescope_nmap("<leader>l", "current_buffer_fuzzy_find")
+u.telescope_nmap("<leader>m", "marks")
+u.telescope_nmap("<leader>M", "man_pages")
+u.telescope_nmap("<leader>?", "oldfiles")
+u.telescope_nmap("<leader>r", "live_grep")
+u.telescope_nmap("<leader>gc", "git_bcommits")
+u.telescope_nmap("<leader>gf", "git_files")
+u.telescope_nmap("<leader>z", "spell_suggest")
+u.telescope_nmap("<leader>d", "diagnostics bufnr=0")
+u.telescope_nmap("<leader>D", "diagnostics")
+u.telescope_nmap("<leader>t", "lsp_document_symbols")
+u.telescope_nmap("<leader>T", "lsp_workspace_symbols")
+u.telescope_nmap("gr", "lsp_references")
+u.telescope_nmap("<leader>wl", "vimwiki link")
+u.telescope_nmap("<leader>R", "vimwiki live_grep")
+u.telescope_nmap("<leader>W", "find_files cwd=" .. os.getenv("WIKI"))
+u.telescope_nmap("<leader>O", "find_files cwd=" .. os.getenv("ORGMODE"))
+u.telescope_nmap("<leader>Z", "find_files cwd=" .. os.getenv("ZK"))
+u.telescope_nmap("<leader>C", "find_files cwd=" .. os.getenv("XDG_CONFIG_HOME"))
+u.telescope_nmap("<leader>N", "find_files cwd=" .. os.getenv("XDG_CONFIG_HOME") .. "nvim")
+u.nmap("<leader>y", ':lua require("telescope").extensions.neoclip.default()<CR>')

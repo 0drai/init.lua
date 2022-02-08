@@ -24,6 +24,7 @@ pack.startup(function(use)
 	use({ "tpope/vim-repeat", keys = { "." } })
 	use({ "tpope/vim-surround" })
 	use({ "tpope/vim-fugitive", cmd = { "Git", "Gwrite", "Gedit", "Gvdiffsplit" } })
+	use({ "tpope/vim-commentary" })
 
 	-- g<, g>, gs to swap stuff
 	use({ "machakann/vim-swap" })
@@ -54,18 +55,17 @@ pack.startup(function(use)
 			require("lsp")
 		end,
 		requires = {
-			{ "ray-x/lsp_signature.nvim" }, -- echodoc in good
-			{
-				-- icons in pum
-				"onsails/lspkind-nvim",
-				config = function()
-					require("lspkind").init()
-				end,
-			},
-			-- languagetool server for latex
-			-- { "brymer-meneses/grammar-guard.nvim" },
+
+			-- echodoc in good
+			{ "ray-x/lsp_signature.nvim" },
+
+			{ "tami5/lspsaga.nvim" },
+
 			-- enhances rust
-			{ "simrat39/rust-tools.nvim" }, -- config for rust
+			{ "simrat39/rust-tools.nvim" },
+
+			-- enhances C/C++
+			{ "p00f/clangd_extensions.nvim" },
 		},
 	})
 
@@ -75,13 +75,23 @@ pack.startup(function(use)
 			{ "rafamadriz/friendly-snippets" },
 			{ "L3MON4D3/LuaSnip" },
 
+			-- icons in pum
+			{
+
+				"onsails/lspkind-nvim",
+				config = function()
+					require("lspkind").init({
+						mode = "symbol",
+					})
+				end,
+			},
+
 			-- sources
 			{ "hrsh7th/cmp-nvim-lsp" },
 			{ "hrsh7th/cmp-buffer" },
 			{ "saadparwaiz1/cmp_luasnip" },
 			{ "hrsh7th/cmp-emoji" },
 			{ "hrsh7th/cmp-path" },
-			{ "f3fora/cmp-nuspell", rocks = { "lua-nuspell" } },
 		},
 
 		config = function()
@@ -93,26 +103,17 @@ pack.startup(function(use)
 	use({
 		"abecodes/tabout.nvim",
 		wants = "nvim-treesitter",
+		after = "nvim-cmp",
 		config = function()
 			require("plugins.tabout")
 		end,
 	})
 
-	-- linter (ale replacement)
 	use({
-		"mfussenegger/nvim-lint",
-		event = "BufEnter",
+		"jose-elias-alvarez/null-ls.nvim",
+		requires = { "nvim-lua/plenary.nvim" },
 		config = function()
-			require("plugins.lint")
-		end,
-	})
-
-	-- format with <space>fa
-	use({
-		"lukas-reineke/format.nvim",
-		cmd = { "Format", "FormatWrite" },
-		config = function()
-			require("plugins.format")
+			require("plugins.null-ls")
 		end,
 	})
 
@@ -135,24 +136,10 @@ pack.startup(function(use)
 		"AckslD/nvim-neoclip.lua",
 		requires = { "tami5/sqlite.lua", module = "sqlite" },
 		config = function()
-			require("neoclip").setup({ enable_persistant_history = true })
+			require("neoclip").setup({ enable_persistent_history = true })
 		end,
 	})
 
-	-- basically vim-commentary in lua
-	-- 'gcc' to comment an uncomment stuff
-	use({
-		"winston0410/commented.nvim",
-		config = function()
-			require("commented").setup({
-				keybindings = { n = "gc", v = "gc", nl = "gcc" },
-			})
-		end,
-	})
-
-	-- colorschemes with support for Treesitter, LSP, and so on
-	-- NOTE: load UI plugins after sourcing the colorscheme, for performance
-	-- and to overwrite highlight groups properly
 	use({
 		"marko-cerovac/material.nvim",
 		config = function()
@@ -163,7 +150,6 @@ pack.startup(function(use)
 	use({
 		"lukas-reineke/indent-blankline.nvim",
 		wants = "nvim-treesitter",
-		after = "material.nvim",
 		config = function()
 			require("plugins.others").indent_bline()
 		end,
@@ -174,7 +160,6 @@ pack.startup(function(use)
 		"famiu/feline.nvim",
 		event = "BufWinEnter",
 		config = "require('plugins.feline')",
-		after = "material.nvim",
 		wants = "gitsigns.nvim",
 		requires = { "kyazdani42/nvim-web-devicons" },
 	})
@@ -182,7 +167,6 @@ pack.startup(function(use)
 	-- gitgutter replacement
 	use({
 		"lewis6991/gitsigns.nvim",
-		after = "material.nvim",
 		requires = { "nvim-lua/plenary.nvim" },
 		config = "require('plugins.gitsigns')",
 	})
@@ -216,7 +200,10 @@ pack.startup(function(use)
 		"windwp/nvim-autopairs",
 		after = "nvim-treesitter",
 		config = function()
-			require("plugins.nvim-autopairs")
+			require("nvim-autopairs").setup({
+				check_ts = true,
+				fast_wrap = {},
+			})
 		end,
 	})
 
@@ -231,12 +218,11 @@ pack.startup(function(use)
 		end,
 	})
 
-	-- open agenda with ',oa'
 	use({
-		"kristijanhusak/orgmode.nvim",
-		branch = "tree-sitter",
+		"vimwiki/vimwiki",
+		requires = { "ElPiloto/telescope-vimwiki.nvim", "tools-life/taskwiki", "mattn/calendar-vim" },
 		config = function()
-			require("plugins.orgmode")
+			require("plugins.others").vimwiki()
 		end,
 	})
 
@@ -250,10 +236,10 @@ pack.startup(function(use)
 		end,
 	})
 
-	-- NOTE: symbols-outline has more features than vista, e.g., renaming
-	-- but it relies on LSP. Unlike vista which is able to use tags
+	-- ,v for outline of document
 	use({ "simrat39/symbols-outline.nvim", opt = true, cmd = { "SymbolsOutline" } })
 
+	-- tiling(?) panes for vim
 	use({
 		"beauwilliams/focus.nvim",
 		config = function()
@@ -279,10 +265,7 @@ pack.startup(function(use)
 		run = "cd app && yarn install",
 		ft = { "markdown", "md" },
 	})
-
 	use({ "https://github.com/plasticboy/vim-markdown", ft = { "markdown", "md" } })
-
 	use({ "ron89/thesaurus_query.vim", cmd = "ThesaurusQueryReplaceCurrentWord" })
-
 	use({ "lervag/vimtex", ft = { "latex", "tex" } })
 end)

@@ -1,9 +1,5 @@
+local u = require("config.utils")
 local g = vim.g
-local remap = vim.api.nvim_set_keymap
-local default = { noremap = true, silent = true }
-local rm_n_default = function(key, f)
-	remap("n", key, f, default)
-end
 
 g.dashboard_preview_file_height = 6
 g.dashboard_preview_file_width = 50
@@ -22,8 +18,8 @@ g.dashboard_custom_section = {
 	c = { description = { "  Load Last Session    " }, command = "SessionLoad " },
 
 	d = {
-		description = { "  Orgmode Notes        " },
-		command = "Telescope find_files cwd=" .. os.getenv("ORGMODE"),
+		description = { "  Neorg Notes          " },
+		command = "Telescope find_files cwd=" .. os.getenv("NEORG"),
 	},
 
 	e = {
@@ -80,5 +76,5 @@ g.dashboard_custom_footer = {
 	"        https://youtu.be/dQw4w9WgXcQ",
 }
 
-rm_n_default("<Leader>ss", ":<C-u>SessionSave<CR>")
-rm_n_default("<Leader>sl", ":<C-u>SessionLoad<CR>")
+u.nmap("<Leader>ss", ":<C-u>SessionSave<CR>")
+u.nmap("<Leader>sl", ":<C-u>SessionLoad<CR>")

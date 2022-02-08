@@ -1,5 +1,7 @@
 local M = {}
 local g = vim.g
+local o = vim.opt_local
+local u = require("config.utils")
 
 local cache = os.getenv("XDG_CACHE_HOME")
 
@@ -11,7 +13,7 @@ M.gutentags = function()
 		print("created gutentags dir @ %s", tags_dir)
 	end
 
-	-- telescope does only look for local tag files,
+  -- NOTE: telescope does only look for local tag files,
 	-- which sucks big time
 	-- https://github.com/nvim-telescope/telescope.nvim/pull/288
 	g.gutentags_cache_dir = tags_dir
@@ -50,20 +52,43 @@ end
 
 M.zen = function()
 	require("zen-mode").setup({
-		plugins = { gitsigns = true, tmux = true },
+		plugins = { gitsigns = false, tmux = true },
 
 		-- NOTE: https://github.com/folke/zen-mode.nvim/issues/26
 		on_open = function()
-			vim.opt_local.number = false
-			vim.opt_local.relativenumber = false
+			o.number = false
+			o.relativenumber = false
 			vim.cmd([[IndentBlanklineDisable]])
 		end,
 		on_close = function()
-			vim.opt_local.number = true
-			vim.opt_local.relativenumber = true
+			o.number = true
+			o.relativenumber = true
 			vim.cmd([[IndentBlanklineEnable]])
 		end,
 	})
+end
+
+M.vimwiki = function()
+	local wiki = os.getenv("WIKI")
+	u.command("VimwikiScratch", string.format("e %s/Scratchpad.md", wiki))
+
+	g.vimwiki_auto_header = 1
+	g.vimwiki_hl_headers = 1
+	g.vimwiki_markdown_link_ext = 1
+	g.vimwiki_list = {
+		{
+			["path"] = wiki,
+			["syntax"] = "markdown",
+			["ext"] = ".md",
+			["auto_generate_tags"] = 1,
+			["auto_generated_links"] = 1,
+		},
+	}
+	g.taskwiki_markup_syntax = "markdown"
+	g.taskwiki_taskrc_location = os.getenv("TASKRC")
+	g.taskwiki_data_location = os.getenv("TASKDATA")
+
+	g.vimwiki_conceallevel = 0
 end
 
 return M

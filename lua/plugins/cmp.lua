@@ -4,7 +4,6 @@ local str = require("cmp.utils.str")
 local neogen = require("neogen")
 local luasnip = require("luasnip")
 local lspkind = require("lspkind")
--- luasnip["luasnip.loaders.from_vscode"].load()
 require("luasnip.loaders.from_vscode").load()
 
 vim.opt.pumheight = 15
@@ -64,17 +63,6 @@ cmp.setup({
 			end,
 		}),
 	},
-
-	-- completion = {
-	-- keyword_length = 2,
-	-- border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
-	-- scrollbar = "║",
-	-- },
-
-	-- documentation = {
-	-- border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
-	-- scrollbar = "║",
-	-- },
 
 	mapping = {
 		["<C-b>"] = cmp.mapping.scroll_docs(-4),

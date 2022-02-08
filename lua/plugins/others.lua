@@ -13,7 +13,7 @@ M.gutentags = function()
 		print("created gutentags dir @ %s", tags_dir)
 	end
 
-  -- NOTE: telescope does only look for local tag files,
+	-- NOTE: telescope does only look for local tag files,
 	-- which sucks big time
 	-- https://github.com/nvim-telescope/telescope.nvim/pull/288
 	g.gutentags_cache_dir = tags_dir

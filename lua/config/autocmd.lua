@@ -22,8 +22,8 @@ local autocmds = {
 	packer_compile = {
 		{
 			"BufWritePost",
-			"plugins.lua",
-			[[source <afile> | PackerCompile | echomsg 'packer compiled!']],
+			"init.lua",
+			[[PackerCompile | echomsg 'packer compiled!']],
 		},
 	},
 	-- delete tailing white spaces on save

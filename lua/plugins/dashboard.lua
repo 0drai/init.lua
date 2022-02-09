@@ -18,18 +18,13 @@ g.dashboard_custom_section = {
 	c = { description = { "  Load Last Session    " }, command = "SessionLoad " },
 
 	d = {
-		description = { "  Neorg Notes          " },
-		command = "Telescope find_files cwd=" .. os.getenv("NEORG"),
+		description = { "  Vimwiki Notes         " },
+		command = "Telescope find_files cwd=" .. os.getenv("WIKI"),
 	},
 
 	e = {
 		description = { "  Neovim Config Files  " },
 		command = "Telescope find_files cwd=" .. os.getenv("XDG_CONFIG_HOME") .. "nvim",
-	},
-
-	f = {
-		description = { "⊹  Obsidian Zettelkasten" },
-		command = "Telescope find_files cwd=" .. os.getenv("ZK"),
 	},
 }
 

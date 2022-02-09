@@ -50,45 +50,12 @@ M.matchup = function()
 	g.matchup_surround_enabled = 1
 end
 
-M.zen = function()
-	require("zen-mode").setup({
-		plugins = { gitsigns = false, tmux = true },
-
-		-- NOTE: https://github.com/folke/zen-mode.nvim/issues/26
-		on_open = function()
-			o.number = false
-			o.relativenumber = false
-			vim.cmd([[IndentBlanklineDisable]])
-		end,
-		on_close = function()
-			o.number = true
-			o.relativenumber = true
-			vim.cmd([[IndentBlanklineEnable]])
-		end,
-	})
-end
-
-M.vimwiki = function()
-	local wiki = os.getenv("WIKI")
-	u.command("VimwikiScratch", string.format("e %s/Scratchpad.md", wiki))
-
-	g.vimwiki_auto_header = 1
-	g.vimwiki_hl_headers = 1
-	g.vimwiki_markdown_link_ext = 1
-	g.vimwiki_list = {
-		{
-			["path"] = wiki,
-			["syntax"] = "markdown",
-			["ext"] = ".md",
-			["auto_generate_tags"] = 1,
-			["auto_generated_links"] = 1,
-		},
-	}
-	g.taskwiki_markup_syntax = "markdown"
-	g.taskwiki_taskrc_location = os.getenv("TASKRC")
-	g.taskwiki_data_location = os.getenv("TASKDATA")
-
-	g.vimwiki_conceallevel = 0
+M.vimtex = function()
+	g.vimtex_quickfix_mode = "0"
+	g.vimtex_view_method = "zathura"
+	g.vimtex_view_forward_search_on_start = 1
+	g.tex_flavor = "latex"
+	g.conceallevel = 2
 end
 
 return M

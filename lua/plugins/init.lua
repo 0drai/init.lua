@@ -76,15 +76,7 @@ pack.startup(function(use)
 			{ "L3MON4D3/LuaSnip" },
 
 			-- icons in pum
-			{
-
-				"onsails/lspkind-nvim",
-				config = function()
-					require("lspkind").init({
-						mode = "symbol",
-					})
-				end,
-			},
+			{ "onsails/lspkind-nvim" },
 
 			-- sources
 			{ "hrsh7th/cmp-nvim-lsp" },
@@ -222,7 +214,14 @@ pack.startup(function(use)
 		"vimwiki/vimwiki",
 		requires = { "ElPiloto/telescope-vimwiki.nvim", "tools-life/taskwiki", "mattn/calendar-vim" },
 		config = function()
-			require("plugins.others").vimwiki()
+			require("plugins.vimwiki")
+		end,
+	})
+
+	use({
+		"lervag/vimtex",
+		config = function()
+			require("plugins.others").vimtex()
 		end,
 	})
 
@@ -232,7 +231,7 @@ pack.startup(function(use)
 		cmd = "ZenMode",
 		requires = { "folke/twilight.nvim", cmd = "ZenMode" },
 		config = function()
-			require("plugins.others").zen()
+			require("plugins.zen")
 		end,
 	})
 
@@ -267,5 +266,4 @@ pack.startup(function(use)
 	})
 	use({ "https://github.com/plasticboy/vim-markdown", ft = { "markdown", "md" } })
 	use({ "ron89/thesaurus_query.vim", cmd = "ThesaurusQueryReplaceCurrentWord" })
-	use({ "lervag/vimtex", ft = { "latex", "tex" } })
 end)

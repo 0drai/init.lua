@@ -1,14 +1,3 @@
-local ts_parser = require("nvim-treesitter.parsers").get_parser_configs()
-
-ts_parser.org = {
-	install_info = {
-		url = "https://github.com/milisims/tree-sitter-org",
-		revision = "main",
-		files = { "src/parser.c", "src/scanner.cc" },
-	},
-	filetype = "org",
-}
-
 require("nvim-treesitter.configs").setup({
 	ensure_installed = {
 		"c",
@@ -17,7 +6,7 @@ require("nvim-treesitter.configs").setup({
 		"json",
 		"yaml",
 		"python",
-		"latex",
+		-- "latex", -- not really stable
 		"bash",
 		"html",
 		"typescript",
@@ -26,15 +15,13 @@ require("nvim-treesitter.configs").setup({
 		"bibtex",
 		"dockerfile",
 		"rust",
+    "markdown",
 		"comment",
 		"toml",
-		"norg",
 	},
 
 	highlight = {
 		enable = true,
-		-- disable = {'org'},
-		-- additional_vim_regex_highlighting = { "org" },
 	},
 
 	textobjects = {
@@ -48,6 +35,8 @@ require("nvim-treesitter.configs").setup({
 				["ib"] = "@block.inner",
 				["af"] = "@function.outer",
 				["if"] = "@function.inner",
+				["al"] = "@loop.outer",
+				["il"] = "@loop.inner",
 			},
 		},
 	},
@@ -86,7 +75,7 @@ require("nvim-treesitter.configs").setup({
 	rainbow = {
 		enable = true,
 		extended_mode = true, -- Highlight also non-parentheses delimiters, boolean or table: lang -> boolean
-		max_file_lines = 500,
+		max_file_lines = 200,
 	},
 
 	matchup = {

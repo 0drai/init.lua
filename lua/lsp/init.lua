@@ -62,18 +62,6 @@ local on_attach = function(client, bufnr)
 	client.resolved_capabilities.document_formating = false
 	client.resolved_capabilities.range_formating = false
 
-	if client.resolved_capabilities.document_highlight then
-		vim.cmd([[
-      hi! LspReferenceRead cterm=bold ctermbg=red guibg=LightYellow
-      hi! LspReferenceText cterm=bold ctermbg=red guibg=LightYellow
-      hi! LspReferenceWrite cterm=bold ctermbg=red guibg=LightYellow
-      augroup lsp_document_highlight
-        autocmd! * <buffer>
-        autocmd! CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-        autocmd! CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-      augroup END
-    ]])
-	end
 end
 
 local capabilities = cmp_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
@@ -179,7 +167,7 @@ lspconfig.ltex.setup({
 -- 			build = {
 -- 				args = { "-pdf", "-interaction=nonstopmode", "-synctex=1", "-pvc" },
 -- 				forwardSearchAfter = true,
--- 				onSave = true,
+-- 				onSave = false,
 -- 			},
 -- 			forwardSearch = {
 -- 				executable = "zathura",
@@ -188,6 +176,12 @@ lspconfig.ltex.setup({
 -- 			},
 -- 		},
 -- 	},
+-- })
+
+-- lspconfig.tsserver.setup({
+-- 	on_attach = on_attach,
+-- 	capabilities = capabilities,
+-- 	cmd = { "tsserver" },
 -- })
 
 -- stuff like inlay hints and so on
@@ -206,7 +200,7 @@ require("clangd_extensions").setup({
 })
 
 -- use default config for these lsps
-for _, lsp in ipairs({ "bashls", "denols", "dockerls", "solargraph" }) do
+for _, lsp in ipairs({ "bashls", "tsserver", "dockerls", "solargraph" }) do
 	lspconfig[lsp].setup({
 		capabilities = capabilities,
 		on_attach = on_attach,

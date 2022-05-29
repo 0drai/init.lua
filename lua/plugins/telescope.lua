@@ -68,22 +68,22 @@ require("telescope").setup({
 			case_mode = "ignore_case", -- or "ignore_case" or "respect_case"
 		},
 
-		bibtex = {
-			depth = 1,
-			global_files = { os.getenv("MASTERBIB") },
-			search_keys = { "title", "author", "year" },
-		},
+		-- bibtex = {
+		-- 	depth = 1,
+		-- 	global_files = { os.getenv("MASTERBIB") },
+		-- },
 	},
 })
 
 require("telescope").load_extension("fzf")
 require("telescope").load_extension("bibtex")
-require("telescope").load_extension("vimwiki")
+-- require("telescope").load_extension("vimwiki")
 
 -- Telescope
 u.telescope_nmap("<leader>p", "fd")
-u.telescope_nmap("<leader>b", "buffers")
+u.telescope_nmap("<leader>b", "bibtex")
 u.telescope_nmap("<leader>B", "bibtex")
+u.imap("<C-b>", "<ESC>:Telescope bibtex<CR>")
 u.telescope_nmap("<leader>l", "current_buffer_fuzzy_find")
 u.telescope_nmap("<leader>m", "marks")
 u.telescope_nmap("<leader>M", "man_pages")
@@ -94,14 +94,17 @@ u.telescope_nmap("<leader>gf", "git_files")
 u.telescope_nmap("<leader>z", "spell_suggest")
 u.telescope_nmap("<leader>d", "diagnostics bufnr=0")
 u.telescope_nmap("<leader>D", "diagnostics")
+u.telescope_nmap("<leader>q", "quickfix")
 u.telescope_nmap("<leader>t", "lsp_document_symbols")
-u.telescope_nmap("<leader>T", "lsp_workspace_symbols")
-u.telescope_nmap("gr", "lsp_references")
-u.telescope_nmap("<leader>wl", "vimwiki link")
+u.telescope_nmap("<leader>T", "tags")
+-- u.telescope_nmap("gr", "lsp_references")
+-- u.telescope_nmap("<leader>wl", "vimwiki link")
+-- u.imap("<C-q>", "<ESC>:Telescope vimwiki link<CR>")
 u.telescope_nmap("<leader>R", "vimwiki live_grep")
-u.telescope_nmap("<leader>W", "find_files cwd=" .. os.getenv("WIKI"))
+-- u.telescope_nmap("<leader>W", "find_files cwd=" .. os.getenv("WIKI"))
 u.telescope_nmap("<leader>O", "find_files cwd=" .. os.getenv("ORGMODE"))
 u.telescope_nmap("<leader>Z", "find_files cwd=" .. os.getenv("ZK"))
 u.telescope_nmap("<leader>C", "find_files cwd=" .. os.getenv("XDG_CONFIG_HOME"))
 u.telescope_nmap("<leader>N", "find_files cwd=" .. os.getenv("XDG_CONFIG_HOME") .. "nvim")
 u.nmap("<leader>y", ':lua require("telescope").extensions.neoclip.default()<CR>')
+u.imap("<C-y>", '<ESC>:lua require("telescope").extensions.neoclip.default()<CR>')

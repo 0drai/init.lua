@@ -20,14 +20,15 @@ local t = function(key)
 	return vim.api.nvim_replace_termcodes(key, true, true, true)
 end
 
+require("neogen").setup({ snippet_engine = "luasnip" })
+
 cmp.setup({
 	sources = {
 		{ name = "nvim_lsp" },
-		{ name = "orgmode" },
-		{ name = "luasnip" },
+		{ name = "luasnip", priority = 10 },
 		{ name = "emoji" },
 		{ name = "path" },
-		{ name = "neorg" },
+		{ name = "omni", priority = 0 },
 		-- { name = "nuspell" },
 	},
 	snippet = {
@@ -59,12 +60,16 @@ cmp.setup({
 		}),
 	},
 
+	completion = {
+		keyword_length = 2,
+	},
+
 	mapping = {
 		["<C-b>"] = cmp.mapping.scroll_docs(-4),
 		["<C-f>"] = cmp.mapping.scroll_docs(4),
 		["<C-Space>"] = cmp.mapping.complete(),
 		-- ["<C-e>"] = cmp.mapping.close(),
-		["<CR>"] = cmp.mapping.confirm({ select = true }),
+		-- ["<CR>"] = cmp.mapping.confirm({ select = true }),
 
 		["<C-j>"] = cmp.mapping(function(fallback)
 			if luasnip.expand_or_jumpable() then
@@ -82,12 +87,9 @@ cmp.setup({
 			end
 		end),
 
-		-- use tab for everything
 		["<Tab>"] = cmp.mapping(function(fallback)
 			if cmp.visible() then
 				cmp.select_next_item()
-			elseif neogen.jumpable() then
-				vim.fn.feedkeys(t("<cmd>lua require('neogen').jump_next()<CR>"), "")
 			elseif has_words_before() then
 				cmp.complete()
 			else
@@ -101,8 +103,6 @@ cmp.setup({
 		["<S-Tab>"] = cmp.mapping(function(fallback)
 			if cmp.visible() then
 				cmp.select_prev_item()
-			elseif neogen.jumpable(-1) then
-				vim.fn.feedkeys(t("<cmd>lua require('neogen').jump_prev()<CR>"), "")
 			else
 				fallback()
 			end

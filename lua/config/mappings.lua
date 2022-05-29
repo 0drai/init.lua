@@ -87,3 +87,8 @@ u.nmap("<localleader>dp", ":diffput<CR>")
 u.nmap("<localleader>te", ":Texplore<CR>")
 u.nmap("<localleader>se", ":Sexplore<CR>")
 u.nmap("<localleader>ee", ":Explore<CR>")
+
+u.nmap("<localleader>co", ":copen<CR>")
+u.nmap("<localleader>cc", ":cclose<CR>")
+u.nmap("<localleader>cn", ":cnext<CR>")
+u.nmap("<localleader>cp", ":cprev<CR>")

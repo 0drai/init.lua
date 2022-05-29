@@ -31,6 +31,11 @@ local autocmds = {
 
 	spell_leave = { { "BufLeave", "*", "set nospell" } },
 
+	-- disable lsp for vimwiki
+	-- wiki = {
+	-- 	{ "FileType", "vimwiki", [[LspStop]] },
+	-- },
+
 	quit = {
 		{ "FileType", "dashboard,help", [[nnoremap <silent> <buffer> q :q<CR>]] },
 	},

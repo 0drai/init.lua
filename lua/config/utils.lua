@@ -28,7 +28,7 @@ M.t = function(str)
 end
 
 M.command = function(name, fn, opts)
-	api.nvim_add_user_command(name, fn, opts or {})
+	api.nvim_create_user_command(name, fn, opts or { nargs = 1 })
 end
 
 M.telescope_nmap = function(key, cmd)

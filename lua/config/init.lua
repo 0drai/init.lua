@@ -16,8 +16,8 @@ o.signcolumn = "auto:2"
 
 -- disable completion messages
 o.shortmess = vim.o.shortmess .. "c"
-o.relativenumber = true
-o.number = true
+g.relativenumber = true
+g.number = true
 o.splitright = true
 o.splitbelow = true
 o.smartcase = true
@@ -75,6 +75,8 @@ o.backup = false
 o.writebackup = false
 o.swapfile = false
 o.lazyredraw = true
+
+vim.cmd([[set termguicolors]])
 
 require("config.autocmd")
 require("config.mappings")

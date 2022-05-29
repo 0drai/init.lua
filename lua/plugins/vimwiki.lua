@@ -20,4 +20,5 @@ g.taskwiki_markup_syntax = "markdown"
 g.taskwiki_taskrc_location = os.getenv("TASKRC")
 g.taskwiki_data_location = os.getenv("TASKDATA")
 
-g.vimwiki_conceallevel = 0
+g.calendar_monday = 1
+g.calendar_filetype = 'pandoc'

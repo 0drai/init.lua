@@ -27,7 +27,6 @@ require("material").setup({
 		term_colors = true,
 		eob_lines = false,
 	},
-	custom_highlights = {},
 })
 
 vim.cmd([[colorscheme material]])

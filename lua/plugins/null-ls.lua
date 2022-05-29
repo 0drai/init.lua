@@ -4,10 +4,10 @@ local sources = {
 
 	-- formatting
 	null_ls.builtins.formatting.yapf,
-	null_ls.builtins.formatting.clang_format,
 	null_ls.builtins.formatting.rustfmt.with({
 		extra_args = { "--edition=2021" },
 	}),
+
 	null_ls.builtins.formatting.prettier.with({
 		prefer_local = "node_modules/.bin",
 	}),
@@ -24,7 +24,7 @@ local sources = {
 	}),
 
 	null_ls.builtins.formatting.rubocop,
-	null_ls.builtins.formatting.codespell,
+	-- null_ls.builtins.formatting.codespell,
 	null_ls.builtins.formatting.trim_newlines,
 	null_ls.builtins.formatting.trim_whitespace,
 
@@ -47,11 +47,11 @@ local sources = {
 	null_ls.builtins.diagnostics.hadolint,
 	null_ls.builtins.diagnostics.chktex,
 	null_ls.builtins.diagnostics.codespell,
-	null_ls.builtins.diagnostics.cppcheck,
+	-- null_ls.builtins.diagnostics.cppcheck,
 	null_ls.builtins.diagnostics.luacheck,
-	null_ls.builtins.diagnostics.vale.with({
-		extra_filetypes = { "vimwiki" },
-	}),
+	-- null_ls.builtins.diagnostics.vale.with({
+	-- 	extra_filetypes = { "vimwiki" },
+	-- }),
 
 	-- code actions
 	null_ls.builtins.code_actions.eslint.with({

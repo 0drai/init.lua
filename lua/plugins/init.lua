@@ -47,6 +47,7 @@ pack.startup(function(use)
 		end,
 	})
 
+
 	-- LSP stuff
 	-- does not need lazy loading, since it is already lazy
 	use({
@@ -80,10 +81,10 @@ pack.startup(function(use)
 
 			-- sources
 			{ "hrsh7th/cmp-nvim-lsp" },
-			{ "hrsh7th/cmp-buffer" },
 			{ "saadparwaiz1/cmp_luasnip" },
 			{ "hrsh7th/cmp-emoji" },
 			{ "hrsh7th/cmp-path" },
+			{ "hrsh7th/cmp-omni", ft = { "tex" } },
 		},
 
 		config = function()
@@ -173,7 +174,6 @@ pack.startup(function(use)
 
 	use({
 		"p00f/nvim-ts-rainbow",
-		event = "CursorMoved",
 		after = "nvim-treesitter",
 	})
 
@@ -182,7 +182,6 @@ pack.startup(function(use)
 	use({
 		"andymass/vim-matchup",
 		after = "nvim-treesitter",
-		event = "CursorMoved",
 		config = function()
 			require("plugins.others").matchup()
 		end,
@@ -210,19 +209,30 @@ pack.startup(function(use)
 		end,
 	})
 
-	use({
-		"vimwiki/vimwiki",
-		requires = { "ElPiloto/telescope-vimwiki.nvim", "tools-life/taskwiki", "mattn/calendar-vim" },
-		config = function()
-			require("plugins.vimwiki")
-		end,
-	})
+	-- use({
+	-- 	"vimwiki/vimwiki",
+	-- 	requires = { "ElPiloto/telescope-vimwiki.nvim", "tools-life/taskwiki", "mattn/calendar-vim" },
+	-- 	config = function()
+	-- 		require("plugins.vimwiki")
+	-- 	end,
+	-- })
 
 	use({
 		"lervag/vimtex",
 		config = function()
 			require("plugins.others").vimtex()
 		end,
+	})
+
+	use({
+		"anufrievroman/vim-angry-reviewer",
+		config = function()
+			vim.cmd([[
+        let g:AngryReviewerEnglish = 'american'
+        nnoremap <localleader>ar :AngryReviewer<cr>
+      ]])
+		end,
+    cmd = "AngryReviewer"
 	})
 
 	-- goyo replacement
@@ -252,18 +262,11 @@ pack.startup(function(use)
 	})
 
 	use({
-		"glepnir/dashboard-nvim",
-		event = "BufWinEnter",
-		config = function()
-			require("plugins.dashboard")
-		end,
-	})
-
-	use({
 		"iamcco/markdown-preview.nvim",
 		run = "cd app && yarn install",
 		ft = { "markdown", "md" },
 	})
+
 	use({ "https://github.com/plasticboy/vim-markdown", ft = { "markdown", "md" } })
-	use({ "ron89/thesaurus_query.vim", cmd = "ThesaurusQueryReplaceCurrentWord" })
+	use({ "ron89/thesaurus_query.vim" })
 end)
